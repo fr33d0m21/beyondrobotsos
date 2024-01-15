@@ -1,4 +1,3 @@
-```markdown
 # Beyond Robots OS
 
 ## Introduction
@@ -28,6 +27,7 @@ Beyond Robots OS operates through an orchestrated collection of specialized LLM 
 
 ## Installation
 Clone the repository and install dependencies:
+
 ```bash
 git clone [repository URL]
 cd Beyond-Robots-OS
