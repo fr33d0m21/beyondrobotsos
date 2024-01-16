@@ -29,7 +29,7 @@ Beyond Robots OS operates through an orchestrated collection of specialized LLM 
 Clone the repository and install dependencies:
 
 ```bash
-git clone [repository URL]
+git clone https://github.com/fr33d0m21/beyondrobotsos/
 cd Beyond-Robots-OS
 pip install -r requirements.txt
 ```
@@ -52,7 +52,7 @@ Beyond Robots OS is licensed under the [GPL v3 License](LICENSE.md).
 Contributions are welcome! Please read the [contribution guidelines](CONTRIBUTING.md) for details on how to contribute to the project.
 
 ## Contact
-For support or inquiries, please contact [email address/contact information].
+For support or inquiries, please contact [instantmarketingnerds@gmail.com].
 ```
 
 This README provides a comprehensive guide for users and contributors of Beyond Robots OS, reflecting its unique features and capabilities. Be sure to update the repository URL and contact information as appropriate.

@@ -15,12 +15,9 @@ import pygame
 import signal
 import sys
 import importlib
-<<<<<<< HEAD
 import whisper
 import sounddevice as sd
 import numpy as np
-=======
->>>>>>> 85ea67b535896cd809643d643dd8fa0977d7a71d
 
 from tenacity import (
     retry,
@@ -29,14 +26,10 @@ from tenacity import (
 )
 client = OpenAI()
 
-<<<<<<< HEAD
 data_url = None  
 
 log = ""
 conversa = []
-=======
-data_url = None  # some default value
->>>>>>> 85ea67b535896cd809643d643dd8fa0977d7a71d
 
 def shutdown():
     shutdown_func = request.environ.get('werkzeug.server.shutdown')
@@ -69,10 +62,7 @@ def load_agents():
 agents = load_agents()
 # Now you can access your agents like: agents['answer_agent'].function_name()
 
-<<<<<<< HEAD
 
-=======
->>>>>>> 85ea67b535896cd809643d643dd8fa0977d7a71d
 def text_to_speech(text):
     CHUNK_SIZE = 1024
     url = "https://api.elevenlabs.io/v1/text-to-speech/q9WrmbeoNoOQB0kmb5gD"
@@ -89,10 +79,6 @@ def text_to_speech(text):
             "similarity_boost": 0.75
         }
     }
-<<<<<<< HEAD
-=======
-
->>>>>>> 85ea67b535896cd809643d643dd8fa0977d7a71d
     try:
         response = requests.post(url, json=data, headers=headers)
         response.raise_for_status()
@@ -124,7 +110,6 @@ def text_to_speech(text):
     finally:
         pygame.mixer.music.unload()
         if os.path.exists(filename):
-<<<<<<< HEAD
            os.remove(filename)
 
 def text_to_speech_thread_function(text):
@@ -167,36 +152,6 @@ def listen_in_background_thread_function():
     listen_in_background_thread = threading.Thread(target=listen_in_background_thread_function)
     listen_in_background_thread.daemon = True
     listen_in_background_thread.start()
-=======
-            os.remove(filename)
-
-
-# Speech to text (Unreliable)
-#def callback(recognizer, audio):
-#    global input
-#    global log
-#    global conversa
-#    try:
-#        input = recognizer.recognize_google(audio)
-#        log = log + "////" + "User input: " + input
-#        a = "User:", input
-#        conversa.append(a)
-#        print(" "*9999)
-#        for j in conversa:
-#            print(j[0], j[1])
-#    except sr.UnknownValueError:
-#        pass
-#    except sr.RequestError as e:
-#        pass
-#
-#def listen_in_background():
-#    r = sr.Recognizer()
-#    m = sr.Microphone()
-#    stop_listening = r.listen_in_background(m, callback)
-#    time.sleep(999999)
-#    stop_listening(wait_for_stop=False)
-
->>>>>>> 85ea67b535896cd809643d643dd8fa0977d7a71d
 def text():
     global input_user
     global log
