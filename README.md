@@ -31,7 +31,18 @@ Clone the repository and install dependencies:
 ```bash
 git clone https://github.com/fr33d0m21/beyondrobotsos/
 cd Beyond-Robots-OS
+python -m venv beyondrobots
+beyondrobots\Scripts\activate
 pip install -r requirements.txt
+
+```
+
+## Set API Keys
+
+```bash
+set OPENAI_API_KEY=*******
+set ELEVENLABS_API_KEY=******
+
 ```
 
 ## Usage

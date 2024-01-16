@@ -46,3 +46,6 @@ tzlocal==5.2
 urllib3==2.1.0
 Werkzeug==3.0.1
 wsproto==1.2.0
+openai-whisper==v20231117
+sounddevice==0.4.6
+
