@@ -15,6 +15,12 @@ import pygame
 import signal
 import sys
 import importlib
+<<<<<<< HEAD
+import whisper
+import sounddevice as sd
+import numpy as np
+=======
+>>>>>>> 85ea67b535896cd809643d643dd8fa0977d7a71d
 
 from tenacity import (
     retry,
@@ -23,7 +29,14 @@ from tenacity import (
 )
 client = OpenAI()
 
+<<<<<<< HEAD
+data_url = None  
+
+log = ""
+conversa = []
+=======
 data_url = None  # some default value
+>>>>>>> 85ea67b535896cd809643d643dd8fa0977d7a71d
 
 def shutdown():
     shutdown_func = request.environ.get('werkzeug.server.shutdown')
@@ -56,6 +69,10 @@ def load_agents():
 agents = load_agents()
 # Now you can access your agents like: agents['answer_agent'].function_name()
 
+<<<<<<< HEAD
+
+=======
+>>>>>>> 85ea67b535896cd809643d643dd8fa0977d7a71d
 def text_to_speech(text):
     CHUNK_SIZE = 1024
     url = "https://api.elevenlabs.io/v1/text-to-speech/q9WrmbeoNoOQB0kmb5gD"
@@ -72,7 +89,10 @@ def text_to_speech(text):
             "similarity_boost": 0.75
         }
     }
+<<<<<<< HEAD
+=======
 
+>>>>>>> 85ea67b535896cd809643d643dd8fa0977d7a71d
     try:
         response = requests.post(url, json=data, headers=headers)
         response.raise_for_status()
@@ -104,6 +124,50 @@ def text_to_speech(text):
     finally:
         pygame.mixer.music.unload()
         if os.path.exists(filename):
+<<<<<<< HEAD
+           os.remove(filename)
+
+def text_to_speech_thread_function(text):
+    text_to_speech_thread = threading.Thread(target=text_to_speech_thread_function, args=(answer,))
+    text_to_speech_thread.daemon = True
+    text_to_speech_thread.start()
+
+#whisper support
+def callback(indata, frames, time, status):
+    global log
+    global conversa
+
+    if status:
+        print(status, file=sys.stderr)
+    if np.any(indata):
+        model = whisper.load_model("base")  # You can choose different model sizes
+        result = model.transcribe(indata)
+        input_text = result["text"]
+        
+        log = log + "////" + "User input: " + input_text
+        a = ("User:", input_text)
+        conversa.append(a)
+
+        print(" "*9999)
+        for j in conversa:
+            print(j[0], j[1])
+    else:
+        print('No input')
+def listen_in_background_thread_function():
+    def listen_in_background():
+        with sd.InputStream(callback=callback):
+            print("#" * 80)
+            print("Listening...")
+            print("#" * 80)
+            time.sleep(999999)
+
+    listen_in_background()
+    pass
+
+    listen_in_background_thread = threading.Thread(target=listen_in_background_thread_function)
+    listen_in_background_thread.daemon = True
+    listen_in_background_thread.start()
+=======
             os.remove(filename)
 
 
@@ -132,6 +196,7 @@ def text_to_speech(text):
 #    time.sleep(999999)
 #    stop_listening(wait_for_stop=False)
 
+>>>>>>> 85ea67b535896cd809643d643dd8fa0977d7a71d
 def text():
     global input_user
     global log
