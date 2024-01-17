@@ -20,31 +20,39 @@
         <button class="button-3d">BeyondRobots.AI</button>
         <button class="button-3d">Github.com</button>
     </div>
+    <div id="chat-history">
+        <!-- Chat messages will be appended here -->
+    </div>
     <div id="chat-box">
         <textarea id="chat-input" placeholder="Type your message here..."></textarea>
         <button id="send-button" onclick="sendChat()">Send</button>
     </div>
 </section>
 
+
         <section id="data-display">
-            <!-- Thought Container -->
+		
+            <!-- Answer Container -->
             <section class="text-container">
-                <p>Thought: <span id="thought">{{ thought }}</span></p>
+                <p>Answer: <span id="answer">{{ answer }}</span></p>
             </section>
-
-            <!-- Consciousness Container -->
-            <section class="text-container">
-                <p>Consciousness: <span id="consciousness">{{ consciousness }}</span></p>
-            </section>
-
+			
             <!-- Subconsciousness Container -->
             <section class="text-container">
                 <p>Subconsciousness: <span id="subconsciousness">{{ subconsciousness }}</span></p>
             </section>
-
-            <!-- Answer Container -->
+			
+            <!-- Thought Container -->
             <section class="text-container">
-                <p>Answer: <span id="answer">{{ answer }}</span></p>
+                <p>Thought: <span id="thought">{{ thought }}</span></p>
+            </section>
+		</section>
+		
+        <section id="data-display2">
+			
+			<!-- Consciousness Container -->
+            <section class="text-container">
+                <p>Consciousness: <span id="consciousness">{{ consciousness }}</span></p>
             </section>
 
             <!-- Long-Term Memory Container -->
@@ -64,12 +72,36 @@
         </section>
     </main>
 <script>
-function sendChat() {
-    var chatInput = document.getElementById("chat-input").value;
-    // Send the chatInput to the server
-    // Implement AJAX request to '/send_chat' endpoint
-}
+	function sendChat() {
+		var chatInput = document.getElementById("chat-input").value;
+		appendMessage("You: " + chatInput); // Display user's message
+
+		// Create an AJAX request
+		var xhr = new XMLHttpRequest();
+		xhr.open("POST", "/send_chat", true);
+		xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+		xhr.onreadystatechange = function() {
+			if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+				var response = JSON.parse(this.responseText);
+				appendMessage("AI: " + response.response); // Append AI's response from the server
+			}
+		};
+
+		xhr.send("chatInput=" + encodeURIComponent(chatInput));
+		document.getElementById("chat-input").value = ""; // Clear input field
+	}
+
+
+	function appendMessage(message) {
+		var chatHistory = document.getElementById("chat-history"); // Make sure you have this element in HTML
+		var messageElement = document.createElement("p");
+		messageElement.textContent = message;
+		chatHistory.appendChild(messageElement);
+	}
+
 </script>
+
 
     <script>
         // Initialize socket connection

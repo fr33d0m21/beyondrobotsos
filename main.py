@@ -189,11 +189,30 @@ log = ""
 def index():
     return render_template('indexV.html')
     
+chat_history = []  # This will store the conversation history
+
 @app.route('/send_chat', methods=['POST'])
 def handle_chat():
-    chat_input = request.form['chatInput']
-    # Process the chat input
-    return jsonify({"response": "Chat processed"})
+    user_input = request.form['chatInput']
+    
+    # Add user input to chat history
+    chat_history.append({"user": user_input})
+
+    # Generate AI response based on the conversation history
+    ai_response = generate_ai_response(chat_history)  # Implement this function
+
+    # Add AI response to chat history
+    chat_history.append({"ai": ai_response})
+
+    return jsonify({"response": ai_response})
+
+def generate_ai_response(history):
+    # This function should generate a response from the AI model
+    # based on the conversation history.
+    # Implement the logic to send history to your AI model and get the response.
+    # ...
+    return "AI's response"  # Placeholder response
+
     
 @app.route('/store_image_data_url', methods=['POST'])
 def store_image_data_url():

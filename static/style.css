@@ -46,26 +46,42 @@ main {
     padding: 10px 20px;
     margin: 5px;
     text-align: center;
+	margin-left: auto;
+    margin-right: auto;
 }
 
 .button-3d:active {
     box-shadow: 0 2px #666;
     transform: translateY(4px);
+	margin-left: auto;
+    margin-right: auto;
 }
 
 #chat-box {
     margin-top: 20px;
+	margin-left: auto;
+    margin-right: auto;
 }
 
 #chat-input {
     width: 300px;
     height: 100px;
     margin-bottom: 10px;
+	margin-left: auto;
+    margin-right: auto;
 }
 
 
 /* Assuming #data-display is the container for your textual content */
 #data-display {
+    border: 3px solid #bcea02; /* Ternary color for border */
+    padding: 1em;
+    margin-top: 1em;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5); /* Added shadow to text container */
+}
+
+/* Assuming #data-display is the container for your textual content */
+#data-display2 {
     border: 3px solid #bcea02; /* Ternary color for border */
     padding: 1em;
     margin-top: 1em;
