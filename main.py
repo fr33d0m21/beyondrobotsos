@@ -4,6 +4,7 @@ import time
 from flask_socketio import emit
 from flask import Flask, render_template, request, send_from_directory
 from flask_socketio import SocketIO, emit
+from flask import Flask, request, jsonify
 import logging
 import requests
 from playsound import playsound
@@ -187,6 +188,13 @@ log = ""
 @app.route('/')
 def index():
     return render_template('indexV.html')
+    
+@app.route('/send_chat', methods=['POST'])
+def handle_chat():
+    chat_input = request.form['chatInput']
+    # Process the chat input
+    return jsonify({"response": "Chat processed"})
+    
 @app.route('/store_image_data_url', methods=['POST'])
 def store_image_data_url():
     global data_url

@@ -14,6 +14,17 @@
         <section id="webcam-section">
             <video id="webcam1" autoplay></video>
         </section>
+<section id="chat-section">
+    <div id="3d-buttons">
+        <!-- Example 3D button -->
+        <button class="button-3d">BeyondRobots.AI</button>
+        <button class="button-3d">Github.com</button>
+    </div>
+    <div id="chat-box">
+        <textarea id="chat-input" placeholder="Type your message here..."></textarea>
+        <button id="send-button" onclick="sendChat()">Send</button>
+    </div>
+</section>
 
         <section id="data-display">
             <!-- Thought Container -->
@@ -52,6 +63,13 @@
             </section>
         </section>
     </main>
+<script>
+function sendChat() {
+    var chatInput = document.getElementById("chat-input").value;
+    // Send the chatInput to the server
+    // Implement AJAX request to '/send_chat' endpoint
+}
+</script>
 
     <script>
         // Initialize socket connection

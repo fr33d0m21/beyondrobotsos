@@ -38,6 +38,31 @@ main {
     margin-bottom: 20px; /* Space after the webcam section */
 }
 
+.button-3d {
+    /* Styling for 3D effect */
+    border: none;
+    border-radius: 5px;
+    box-shadow: 0 5px #999;
+    padding: 10px 20px;
+    margin: 5px;
+    text-align: center;
+}
+
+.button-3d:active {
+    box-shadow: 0 2px #666;
+    transform: translateY(4px);
+}
+
+#chat-box {
+    margin-top: 20px;
+}
+
+#chat-input {
+    width: 300px;
+    height: 100px;
+    margin-bottom: 10px;
+}
+
 
 /* Assuming #data-display is the container for your textual content */
 #data-display {
