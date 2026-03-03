@@ -1,2 +1,5 @@
 beyond
 beyondrobots
+venv/
+__pycache__/
+*.pyc
