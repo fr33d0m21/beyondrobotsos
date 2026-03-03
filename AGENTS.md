@@ -3,7 +3,7 @@
 ## Cursor Cloud specific instructions
 
 ### Project overview
-Beyond Robots OS is a cognitive AI robot operating system — a single Python Flask+SocketIO app (`main.py`) that orchestrates OpenAI GPT-4 modules to simulate human-like cognition. See `README.md` for details.
+Beyond Robots OS is a cognitive AI robot operating system — a single Python Flask+SocketIO app (`main.py`) that orchestrates OpenAI LLM modules to simulate human-like cognition. See `README.md` for details. All modules use the `GPT-5.3-Codex-Spark` model.
 
 ### Running the app
 - **Entry point:** `python run_dev.py` (wrapper that passes `allow_unsafe_werkzeug=True` to Flask-SocketIO).
@@ -19,6 +19,10 @@ Beyond Robots OS is a cognitive AI robot operating system — a single Python Fl
 - `python3.12-dev` and `portaudio19-dev` system packages are required to compile `PyAudio`.
 - `ffmpeg` system package is required by `openai-whisper`.
 - The `text()` thread in `main.py` reads from stdin; in a non-interactive shell it raises `EOFError` and exits gracefully — this is normal.
+
+### Chat vs Cognitive loop
+- The `/send_chat` endpoint returns a hardcoded placeholder (`"AI's response"`) and does **not** call OpenAI. It works without a valid API key or model.
+- The cognitive loop (`start_thoght_loop` in `main.py`) runs in a background daemon thread and makes real OpenAI API calls. Its outputs (Thought, Consciousness, Subconsciousness, Answer, Memory) are pushed to the browser via SocketIO. This loop requires a valid `OPENAI_API_KEY` **and** a model the account has access to.
 
 ### Linting / Testing / Building
 - The project has **no linter**, **no test suite**, and **no build system**. There is no `pyproject.toml`, `setup.py`, `Makefile`, or CI configuration.
