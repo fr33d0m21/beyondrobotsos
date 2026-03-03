@@ -3,7 +3,7 @@
 ## Cursor Cloud specific instructions
 
 ### Project overview
-Beyond Robots OS is a cognitive AI robot operating system — a single Python Flask+SocketIO app (`main.py`) that orchestrates OpenAI LLM modules to simulate human-like cognition. See `README.md` for details. All modules use the `gpt-5.3-codex` model.
+Beyond Robots OS is a cognitive AI robot operating system — a single Python Flask+SocketIO app (`main.py`) that orchestrates OpenAI LLM modules to simulate human-like cognition. See `README.md` for details. All modules use the `gpt-5.3-chat-latest` model.
 
 ### Running the app
 - **Entry point:** `python run_dev.py` (wrapper that passes `allow_unsafe_werkzeug=True` to Flask-SocketIO).
