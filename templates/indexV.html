@@ -1,175 +1,123 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Interface</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ app_name }}</title>
     <link rel="stylesheet" type="text/css" href="/static/style.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.4.0/socket.io.js"></script>
 </head>
 <body>
     <header>
-        <h1>Beyond Robots</h1>
+        <h1>{{ app_name }}</h1>
+        <p>Operator Console</p>
     </header>
     <main>
-        <section id="webcam-section">
-            <video id="webcam1" autoplay></video>
+        <section class="panel">
+            <h2>New Task</h2>
+            <label for="intent">Intent</label>
+            <textarea id="intent" placeholder="Example: Spawn an OpenClaw coding agent and prepare a Cursor cloud job for onboarding docs."></textarea>
+            <label for="user-id">User ID</label>
+            <input id="user-id" value="default-user">
+            <button id="submit-task">Submit Task</button>
+            <pre id="submit-result"></pre>
         </section>
-<section id="chat-section">
-    <div id="3d-buttons">
-        <!-- Example 3D button -->
-        <button class="button-3d">BeyondRobots.AI</button>
-        <button class="button-3d">Github.com</button>
-    </div>
-    <div id="chat-history">
-        <!-- Chat messages will be appended here -->
-    </div>
-    <div id="chat-box">
-        <textarea id="chat-input" placeholder="Type your message here..."></textarea>
-        <button id="send-button" onclick="sendChat()">Send</button>
-    </div>
-</section>
 
+        <section class="panel">
+            <h2>Pending Approvals</h2>
+            <div id="approvals"></div>
+        </section>
 
-        <section id="data-display">
-		
-            <!-- Answer Container -->
-            <section class="text-container">
-                <p>Answer: <span id="answer">{{ answer }}</span></p>
-            </section>
-			
-            <!-- Subconsciousness Container -->
-            <section class="text-container">
-                <p>Subconsciousness: <span id="subconsciousness">{{ subconsciousness }}</span></p>
-            </section>
-			
-            <!-- Thought Container -->
-            <section class="text-container">
-                <p>Thought: <span id="thought">{{ thought }}</span></p>
-            </section>
-		</section>
-		
-        <section id="data-display2">
-			
-			<!-- Consciousness Container -->
-            <section class="text-container">
-                <p>Consciousness: <span id="consciousness">{{ consciousness }}</span></p>
-            </section>
+        <section class="panel">
+            <h2>Task Queue</h2>
+            <pre id="tasks"></pre>
+        </section>
 
-            <!-- Long-Term Memory Container -->
-            <section class="text-container">
-                <p>Long-Term Memory: <span id="long-term-memory">{{ long_term_memory }}</span></p>
-            </section>
-
-            <!-- Short-Term Memory Container -->
-            <section class="text-container">
-                <p>Short-Term Memory: <span id="short-term-memory">{{ short_term_memory }}</span></p>
-            </section>
-
-            <!-- Log Container -->
-            <section class="text-container">
-                <p>Log: <span id="log">{{ log }}</span></p>
-            </section>
+        <section class="panel">
+            <h2>Memory Timeline</h2>
+            <pre id="memory"></pre>
         </section>
     </main>
-<script>
-	function sendChat() {
-		var chatInput = document.getElementById("chat-input").value;
-		appendMessage("You: " + chatInput); // Display user's message
-
-		// Create an AJAX request
-		var xhr = new XMLHttpRequest();
-		xhr.open("POST", "/send_chat", true);
-		xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-
-		xhr.onreadystatechange = function() {
-			if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
-				var response = JSON.parse(this.responseText);
-				appendMessage("AI: " + response.response); // Append AI's response from the server
-			}
-		};
-
-		xhr.send("chatInput=" + encodeURIComponent(chatInput));
-		document.getElementById("chat-input").value = ""; // Clear input field
-	}
-
-
-	function appendMessage(message) {
-		var chatHistory = document.getElementById("chat-history"); // Make sure you have this element in HTML
-		var messageElement = document.createElement("p");
-		messageElement.textContent = message;
-		chatHistory.appendChild(messageElement);
-	}
-
-</script>
-
 
     <script>
-        // Initialize socket connection
-        var socket = io();
+        async function fetchState() {
+            const res = await fetch("/api/state");
+            return await res.json();
+        }
+
+        function jsonPretty(value) {
+            return JSON.stringify(value, null, 2);
+        }
+
+        function renderApprovals(approvals) {
+            const container = document.getElementById("approvals");
+            container.innerHTML = "";
+            const entries = Object.entries(approvals || {});
+            if (!entries.length) {
+                container.textContent = "No pending approvals.";
+                return;
+            }
+            entries.forEach(([taskId, value]) => {
+                const wrap = document.createElement("div");
+                wrap.className = "approval-card";
+                const summary = document.createElement("pre");
+                summary.textContent = jsonPretty(value);
+                const approve = document.createElement("button");
+                approve.textContent = "Approve";
+                approve.onclick = async () => {
+                    await fetch(`/api/approvals/${taskId}/resolve`, {
+                        method: "POST",
+                        headers: {"Content-Type": "application/json"},
+                        body: JSON.stringify({approved: true})
+                    });
+                };
+                const reject = document.createElement("button");
+                reject.textContent = "Reject";
+                reject.onclick = async () => {
+                    await fetch(`/api/approvals/${taskId}/resolve`, {
+                        method: "POST",
+                        headers: {"Content-Type": "application/json"},
+                        body: JSON.stringify({approved: false})
+                    });
+                };
+                wrap.appendChild(summary);
+                wrap.appendChild(approve);
+                wrap.appendChild(reject);
+                container.appendChild(wrap);
+            });
+        }
+
+        async function refresh() {
+            const state = await fetchState();
+            document.getElementById("tasks").textContent = jsonPretty(state.tasks || {});
+            document.getElementById("memory").textContent = jsonPretty(state.memory || {});
+            renderApprovals(state.approvals || {});
+        }
+
+        document.getElementById("submit-task").onclick = async () => {
+            const payload = {
+                intent: document.getElementById("intent").value,
+                user_id: document.getElementById("user-id").value
+            };
+            const res = await fetch("/api/tasks", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify(payload)
+            });
+            const body = await res.json();
+            document.getElementById("submit-result").textContent = jsonPretty(body);
+            await refresh();
+        };
+
+        const socket = io();
         socket.on("update", function(data) {
-            // Update your page with the new data
-            document.getElementById("long-term-memory").innerHTML = data.long_term_memory;
-            document.getElementById("short-term-memory").innerHTML = data.short_term_memory;
-            document.getElementById("subconsciousness").innerHTML = data.subconsciousness;
-            document.getElementById("thought").innerHTML = data.thought;
-            document.getElementById("consciousness").innerHTML = data.consciousness;
-            document.getElementById("answer").innerHTML = data.answer;
-            document.getElementById("log").innerHTML = data.log;
+            document.getElementById("tasks").textContent = jsonPretty(data.tasks || {});
+            document.getElementById("memory").textContent = jsonPretty(data.memory || {});
+            renderApprovals(data.approvals || {});
         });
 
-        window.onload = function() {
-            const video = document.getElementById('webcam1');
-            const canvas = document.createElement('canvas'); // Added canvas element
-            const frame = document.createElement('img');     // Added frame element
-
-            // Check if the browser supports getUserMedia
-            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-                // Request the webcam
-                navigator.mediaDevices.getUserMedia({ video: true })
-                    .then(stream => {
-                        // Assign the stream to the video element's srcObject
-                        video.srcObject = stream;
-                        video.onloadedmetadata = () => {
-                            // Play the video
-                            video.play();
-                        };
-                    })
-                    .catch(error => {
-                        // Log any errors to the console
-                        console.error("Error accessing webcam:", error);
-                    });
-            } else {
-                console.error("getUserMedia not supported.");
-            }
-
-            setInterval(() => {
-                if (video.readyState === video.HAVE_ENOUGH_DATA) {
-                    canvas.width = video.videoWidth;      // Set canvas width
-                    canvas.height = video.videoHeight;    // Set canvas height
-                    const context = canvas.getContext('2d');
-                    context.drawImage(video, 0, 0, canvas.width, canvas.height);
-                    const dataUrl = canvas.toDataURL('image/png');
-                    frame.src = dataUrl;
-                    frame.style.display = 'block'; // Display the frame when it has content
-
-                    // Send the data URL to the server
-                    $.ajax({
-                        url: 'http://127.0.0.1:5000/store_image_data_url', // Your server URL
-                        type: 'POST',
-                        data: { data_url: dataUrl },
-                        success: function(response) {
-                            console.log('Image data sent successfully.');
-                            // Additional success handling here, if needed
-                        },
-                        error: function(xhr, status, error) {
-                            console.error('Error sending image data:', error);
-                            // Additional error handling here, if needed
-                        }
-                    });
-                }
-            }, 100); //Interval for capturing frames - adjust as needed
-};
-</script>
-
+        refresh();
+        setInterval(refresh, 4000);
+    </script>
 </body>
 </html>

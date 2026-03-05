@@ -1,38 +1,50 @@
 # Beyond Robots OS
 
 ## Introduction
-Beyond Robots OS is an open-source cognitive robot operating system built with AI and a conscious, designed to facilitate complex autonomous interactions. This system stands out by enabling dynamic speech and decision-making, closely mimicking human cognitive processes.
+Beyond Robots OS is now evolving into a business-partner control plane for local agent operations. It combines:
+
+- an intent-driven orchestration core,
+- policy-gated tool execution,
+- OpenClaw and Cursor adapters,
+- desktop screenshot and action tooling,
+- audit/memory persistence for replay and trust.
 
 ## Features
-- **Dynamic Speech**: Enables continuous, context-influenced speaking, moving beyond the reactive nature of standard LLMs.
-- **Live Visual Capabilities**: Integrates visual data, influencing the system's thoughts and behavior in real-time.
-- **External Categorized Memory**: Manages memory dynamically, selecting the most relevant information for writing and retrieval.
-- **Evolving Personality**: Adapts behavior, speech frequency, and style based on stored experiences and interactions.
+- **Business Partner Core**: Intake, planning, routing, execution, and reflection lifecycle.
+- **Semi-Autonomous Policy**: Auto-exec low risk actions, approval for high-impact actions.
+- **OpenClaw Tooling**: Spawn/configure/run/status/list/cancel primitives.
+- **Cursor Tooling**: Cloud-agent job create/status/follow-up primitives.
+- **Desktop Control Pipeline**: Screenshot, click, type, hotkey, scroll, wait tools.
+- **Operator Console**: Task queue, approvals, memory timeline, and live updates.
+- **Audit + Memory Stores**: Persistent JSON/JSONL run traces.
 
 ## How it Works
-Beyond Robots OS operates through an orchestrated collection of specialized LLM modules, each fulfilling a distinct role in the system. The primary modules include Thought, Consciousness, Subconsciousness, Answer, Memory_Read, Memory_Write, Memory_Select, and Vision.
+The control plane is modular:
 
-### Module Workflow
-- **GPT-4 Vision**: Begins the loop with visual processing.
-- **Subconsciousness Module**: Processes visual/user input and context, generating emotional and contextual descriptions.
-- **Memory_Read Module**: Analyzes context and provides relevant memory sections.
-- **Consciousness Module**: Decides on actions (speaking or thinking) based on the analyzed context.
-- **Thought Module**: Generates rational thoughts upon receiving commands.
-- **Answer Module**: Composes responses based on the system's thoughts.
-- **Memory_Write Module**: Transfers data from Short-Term Memory to Long-Term Memory as needed.
+- `core/` for planning and orchestration.
+- `safety/` for risk and approvals.
+- `integrations/` for OpenClaw, Cursor, and desktop tools.
+- `api/` for HTTP endpoints.
+- `storage/` for memory + audit persistence.
 
-### Memory Structure
-- **Short-Term Memory (STM)**: Stores recent user interactions, system responses, and thoughts.
-- **Long-Term Memory (LTM)**: Contains denser knowledge and information abstracted from STM.
+## API Endpoints
+- `GET /api/state`
+- `POST /api/tasks`
+- `GET /api/tasks`
+- `GET /api/tasks/<task_id>`
+- `GET /api/approvals`
+- `POST /api/approvals/<task_id>/resolve`
+- `GET /api/integrations/health`
+- `GET /api/integrations/openclaw/capabilities`
 
 ## Installation
-Clone the repository and install dependencies:
+Clone and install:
 
 ```bash
 git clone https://github.com/fr33d0m21/beyondrobotsos/
-cd Beyond-Robots-OS
-python -m venv beyondrobots
-beyondrobots\Scripts\activate
+cd beyondrobotsos
+python3.11 -m venv .venv311
+source .venv311/bin/activate
 pip install -r requirements.txt
 
 ```
@@ -40,21 +52,28 @@ pip install -r requirements.txt
 ## Set API Keys
 
 ```bash
-set OPENAI_API_KEY=*******
-set ELEVENLABS_API_KEY=******
-
+export OPENAI_API_KEY="..."
+export ELEVENLABS_API_KEY="..."
+export OPENCLAW_BASE_URL="http://127.0.0.1:8788"
+export CURSOR_API_KEY="..."
+export BRO_DRY_RUN_DESKTOP_ACTIONS=true
 ```
 
 ## Usage
 Start the system using:
 ```bash
-python main.py
+python run_dev.py
 ```
-Interact with Beyond Robots OS through the terminal or the Flask web interface.
+Open `http://127.0.0.1:5000/` and use the operator console.
 
-## Improvement and Customization
-- Customize and enhance the system by tweaking modules, their organization, and prompts.
-- Consider developing smaller, specialized models for each module for improved performance.
+## Tests
+Run:
+```bash
+python -m unittest discover -s tests -p "test_*.py"
+```
+
+## Runbook
+See `docs/runbook.md` for operational and recovery procedures.
 
 ## License
 Beyond Robots OS is licensed under the [GPL v3 License](LICENSE.md).
@@ -64,5 +83,3 @@ Contributions are welcome! Please read the [contribution guidelines](CONTRIBUTIN
 
 ## Contact
 For support or inquiries, please contact [instantmarketingnerds@gmail.com].
-```
-
